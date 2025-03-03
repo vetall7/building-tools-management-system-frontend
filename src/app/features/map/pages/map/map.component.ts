@@ -1,9 +1,15 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, inject, OnInit} from '@angular/core';
 import * as L from 'leaflet';
+import {Observable} from 'rxjs';
+import {LocationsService} from '../../services/locations.service';
+import {AsyncPipe} from '@angular/common';
+import {Location} from '../../models/Location';
 
 @Component({
   selector: 'app-map',
-  imports: [],
+  imports: [
+    AsyncPipe
+  ],
   templateUrl: './map.component.html',
   styleUrl: './map.component.css'
 })
@@ -13,6 +19,9 @@ export class MapComponent implements AfterViewInit {
     L.marker([54.372158, 18.638306])
   ];
 
+  private readonly locationsService = inject(LocationsService);
+
+  protected locations$: Observable<Location[]> = this.locationsService.getLocations();
 
   ngAfterViewInit() {
     this.initMap();
