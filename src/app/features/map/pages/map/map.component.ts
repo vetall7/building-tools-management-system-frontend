@@ -13,7 +13,7 @@ import {Location} from '../../models/Location';
   templateUrl: './map.component.html',
   styleUrl: './map.component.css'
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements AfterViewInit, OnInit {
   private map!: L.Map
   markers: L.Marker[] = [
     L.marker([54.372158, 18.638306])
@@ -21,7 +21,15 @@ export class MapComponent implements AfterViewInit {
 
   private readonly locationsService = inject(LocationsService);
 
-  protected locations$: Observable<Location[]> = this.locationsService.getLocations();
+  ngOnInit(): void {
+    this.locationsService.getLocations().subscribe(locations => {
+      locations.forEach(location => {
+        const marker = new CustomMarker(location)
+          .addTo(this.map);
+        this.markers.push(marker);
+      });
+    });
+  }
 
   ngAfterViewInit() {
     this.initMap();
@@ -41,5 +49,11 @@ export class MapComponent implements AfterViewInit {
     this.map.fitBounds(bounds);
 
     L.control.scale().addTo(this.map);
+  }
+}
+
+class CustomMarker extends L.Marker {
+  constructor(public location: Location) {
+    super([location.latitude, location.longitude]);
   }
 }
