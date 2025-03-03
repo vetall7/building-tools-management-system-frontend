@@ -1,0 +1,5 @@
+@let tools = tools$ | async;
+
+@for(tool of tools$ | async; track tool.id) {
+  <app-tool-single [tool]="tool"></app-tool-single>
+}

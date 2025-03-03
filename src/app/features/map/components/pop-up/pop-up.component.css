@@ -1,0 +1,8 @@
+.pop-up{
+  width: 200px;
+}
+
+.buttons{
+  display: flex;
+  justify-content: space-around;
+}
